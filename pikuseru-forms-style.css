@@ -1,0 +1,24 @@
+
+
+form#pikuseru-form-1 textarea, form#pikuseru-form-1 input {
+	width: 100%;
+
+}
+
+form#pikuseru-form-1 #form-col{
+	padding: 10px 10px 10px 0;
+}
+
+.pikuseru-btn-green {
+	color: white;
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: rgb(165, 216, 103);
+}
+
+.pikuseru-btn-green:hover {
+	border-radius: 0px;
+	border-color: transparent;
+	background-color: rgb(150, 197, 93);
+}
+
