@@ -2,9 +2,9 @@
 /*
 Plugin Name: Pikuseru Form Plugin
 Plugin URI: http://pikuseru.dk/
-Description: Pikuseru Form Plugin indsætter forms med shortcoden [pikuseru-form-(id)]. Modificeret specielt til Dimension Design. 
+Description: Pikuseru Form Plugin indsætter forms med shortcoden [pikuseru-form-(id)].
 Version: 3.2.1
-Author: Pikuseru
+Author: Rune Møller Kjerri
 Author URI: http://pikuseru.dk/
 License: Copyright 2014 Pikuseru
 */
@@ -230,8 +230,9 @@ function pikuseru_form_ajax() {
 
                     $send_to = $form2_data['email']; /* sending the form to the form entered email */
                     $email_subject = "Din gratis bog fra [" . get_bloginfo('name') . "] ";
-                    $email_message = 'Klik på linket og indtast følgende kode: ÆbleMand4012, for at downloade din gratis e-bog'; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
-                    $headers  = "From: <".$form2_data['email'].">\n";
+                    $email_message = "Klik på linket for at downloade din gratis e-bog!\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
+                    $email_message.= "http://merefart.testhjemmeside.dk/giveaway/";
+                    $headers  = "From: <giveaway@merefart.dk>\n";
                     $headers .= "Content-Type: text/plain; charset=UTF-8\n";
                     $headers .= "Content-Transfer-Encoding: 8bit\n";
                     wp_mail($send_to, $email_subject, $email_message, $headers);
