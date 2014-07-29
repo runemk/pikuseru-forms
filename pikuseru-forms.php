@@ -229,13 +229,24 @@ function pikuseru_form_ajax() {
                 }else{
 
                     $send_to = $form2_data['email']; /* sending the form to the form entered email */
-                    $email_subject = "Din gratis bog fra [" . get_bloginfo('name') . "] ";
-                    $email_message = "Klik på linket for at downloade din gratis e-bog!\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
-                    $email_message.= "http://merefart.testhjemmeside.dk/giveaway/";
-                    $headers  = "From: <giveaway@merefart.dk>\n";
-                    $headers .= "Content-Type: text/plain; charset=UTF-8\n";
-                    $headers .= "Content-Transfer-Encoding: 8bit\n";
+                    $email_subject = "Din gratis e-bog fra [" . get_bloginfo('name') . "] ";
+
+                    $email_message = "Klik på linket, og indtast følgende kode for at downloade din gratis e-bog!\r\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
+                    $email_message .="ÆbleMand4012\r\n";
+                    $email_message.= "merefart.testhjemmeside.dk/giveaway/\r\n";
+                    $email_message.= "Bemærk at du ikke kan svare på denne besked.\r\n";
+                    
+                    add_filter( 'wp_mail_from_name', function($name){
+                        return 'Merefart.dk';
+                    });
+                    add_filter( 'wp_mail_from', function($email){
+                        return 'giveaway@merefart.dk';
+                    });
+        
                     wp_mail($send_to, $email_subject, $email_message, $headers);
+
+                    remove_filter('wp_mail_from_name', $name);
+                    remove_filter('wp_mail_from', $email);
                     $sent = true;
                     if($sent === true){
                     $ajaxresponse['type'] = 'success';
@@ -255,6 +266,12 @@ function pikuseru_form_ajax() {
         }
    
 }
+
+add_filter( 'wp_mail_from_name', function($from_name){
+    return 'Merefart.dk';
+});
+
+
 
 function pikuseru_form_init() {
      $template = '<form id="pikuseru-form-1"  class="form-inline" role="form" method="post" action="'.get_permalink().'">
