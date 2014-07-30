@@ -252,26 +252,28 @@ function pikuseru_form_ajax() {
                     $email_subject = "Din gratis e-bog fra [" . get_bloginfo('name') . "] ";
 
                     $email_message = "Klik på linket, og indtast følgende kode for at downloade din gratis e-bog!\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
-                    $email_message.= "Kodeord:".get_field('password', 250)." \n";
+                    $email_message.= "Kodeord: the test \n";
                     $email_message.= "merefart.testhjemmeside.dk/giveaway/\n";
                     $email_message.= "Bemærk at du ikke kan svare på denne besked.\r\n";
                     //wp filter funktion, ændre fra navnet
                     add_filter( 'wp_mail_from_name', function($name){
-                        return 'Merefart.dk';
+                        return 'Merefart';
                     });
                     //wp filter funktion ændre den email mailen bliver sendt fra
                     add_filter( 'wp_mail_from', function($email){
                         return 'giveaway@merefart.testhjemmeside.dk';
                     });
+
                     //attach logo til mailen 
-                    $attachments = array( get_template_directory_uri() . '/img/logo.png');
+                    //$attachments = array( get_template_directory_uri() . '/img/logo.png');
                     //wp_mail funktion sender mailen, bruger phpmailer
-                    wp_mail($send_to, $email_subject, $email_message, $headers, $attachments);
+                    $sent = wp_mail($send_to, $email_subject, $email_message, $headers);
                     //fjerner filterne igen. 
                     remove_filter('wp_mail_from_name', $name);
                     remove_filter('wp_mail_from', $email);
-                    $sent = true;
-                    if($sent === true){
+
+
+                    if($sent){
                     $ajaxresponse['type'] = 'success';
                     $ajaxresponse['message'] = 'Tjek din email! Vi har sendt et download link til din gratis ebog!';
                     }else{
