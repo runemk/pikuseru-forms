@@ -2,8 +2,8 @@
 /*
 Plugin Name: Pikuseru Form Plugin
 Plugin URI: http://pikuseru.dk/
-Description: Pikuseru Form Plugin indsætter forms med shortcoden [pikuseru-form-(id)].
-Version: 3.2.1
+Description: Pikuseru Form Plugin indsætter forms med shortcoden [pikuseru-form-(id)]. Leverages Advanced Custom plugin. 
+Version: 3.2.4
 Author: Rune Møller Kjerri
 Author URI: http://pikuseru.dk/
 License: Copyright 2014 Pikuseru
@@ -18,7 +18,7 @@ function pikuseru_form_setup() {
 
     wp_register_script( 'pikuseru_form', plugins_url( '/js/pikuseru-form.js', __FILE__ ), array('jquery', 'jquery-form') );
     wp_enqueue_script( 'pikuseru_form',  array('jquery', 'jquery-form'), false, true);
-
+    //the js file uses these localized scripts 
     wp_localize_script(
     'pikuseru_form',
     'URLS',
@@ -33,6 +33,24 @@ function pikuseru_form_setup() {
 
 add_action('wp_enqueue_scripts','pikuseru_form_setup');
 
+
+ 
+function my_acf_settings_dir( $dir ) {
+ 
+    // update path
+    $dir = get_stylesheet_directory_uri() . '/advanced-custom-fields/';
+    
+    
+    // return
+    return $dir;
+    
+}
+ 
+ 
+add_filter('acf/settings/show_admin', '__return_false');
+ 
+
+
 //For IPen fra hvemend der submitter formen. Derved kan der tjekkes for evt. spam
 function get_the_ip() {
     if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
@@ -46,6 +64,8 @@ function get_the_ip() {
     }
 }
 
+
+//ALL ajax in wordpress MUST be processed through wp ajax actions. The second argument is the .js file to target. 
 add_action('wp_ajax_nopriv_ACTION', 'pikuseru_form_ajax');
 add_action('wp_ajax_ACTION', 'pikuseru_form_ajax');
 
@@ -231,20 +251,23 @@ function pikuseru_form_ajax() {
                     $send_to = $form2_data['email']; /* sending the form to the form entered email */
                     $email_subject = "Din gratis e-bog fra [" . get_bloginfo('name') . "] ";
 
-                    $email_message = "Klik på linket, og indtast følgende kode for at downloade din gratis e-bog!\r\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
-                    $email_message .="ÆbleMand4012\r\n";
-                    $email_message.= "merefart.testhjemmeside.dk/giveaway/\r\n";
+                    $email_message = "Klik på linket, og indtast følgende kode for at downloade din gratis e-bog!\n"; /*. "\n\nBesked sendt fra denne ip adresse: " . get_the_ip();*/ /* we dont need to send the IP for this */
+                    $email_message.= "Kodeord:".get_field('password', 250)." \n";
+                    $email_message.= "merefart.testhjemmeside.dk/giveaway/\n";
                     $email_message.= "Bemærk at du ikke kan svare på denne besked.\r\n";
-                    
+                    //wp filter funktion, ændre fra navnet
                     add_filter( 'wp_mail_from_name', function($name){
                         return 'Merefart.dk';
                     });
+                    //wp filter funktion ændre den email mailen bliver sendt fra
                     add_filter( 'wp_mail_from', function($email){
-                        return 'giveaway@merefart.dk';
+                        return 'giveaway@merefart.testhjemmeside.dk';
                     });
-        
-                    wp_mail($send_to, $email_subject, $email_message, $headers);
-
+                    //attach logo til mailen 
+                    $attachments = array( get_template_directory_uri() . '/img/logo.png');
+                    //wp_mail funktion sender mailen, bruger phpmailer
+                    wp_mail($send_to, $email_subject, $email_message, $headers, $attachments);
+                    //fjerner filterne igen. 
                     remove_filter('wp_mail_from_name', $name);
                     remove_filter('wp_mail_from', $email);
                     $sent = true;
@@ -266,11 +289,6 @@ function pikuseru_form_ajax() {
         }
    
 }
-
-add_filter( 'wp_mail_from_name', function($from_name){
-    return 'Merefart.dk';
-});
-
 
 
 function pikuseru_form_init() {
@@ -314,7 +332,6 @@ add_shortcode( 'pikuseru-form-1-response', 'pikuseru_form_1_response' );
 
 function pikuseru_form_2_response(){
     $template = '
-        <br>
         <br>
         <div id="pikuseru-form-2-message" class="text-center alert">
         </div>
