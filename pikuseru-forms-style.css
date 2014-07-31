@@ -9,6 +9,14 @@ form#pikuseru-form-1 #form-col{
 	padding: 10px 10px 10px 0;
 }
 
+#pikuseru-form-2-message {
+	margin: 10px 0;
+}
+
+#pikuseru-form-2 #form-col {
+	padding: 10px 15px;
+}
+
 .pikuseru-btn-green {
 	color: white;
 	border-radius: 0px;

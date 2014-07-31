@@ -330,18 +330,6 @@ function pikuseru_form_1_response(){
 }
 add_shortcode( 'pikuseru-form-1-response', 'pikuseru_form_1_response' );
 
-
-
-function pikuseru_form_2_response(){
-    $template = '
-        <br>
-        <div id="pikuseru-form-2-message" class="text-center alert">
-        </div>
-        ';
-    return $template;
-}
-add_shortcode( 'pikuseru-form-2-response', 'pikuseru_form_2_response' );
-
 function pikuseru_form_2_init(){
     $template = '<form id="pikuseru-form-2" class="contact-form" role="form" method="post" action="'.get_permalink().'">
                 <div id="form-col" class="col-md-7">
@@ -355,3 +343,15 @@ function pikuseru_form_2_init(){
 }
 
 add_shortcode('pikuseru-form-2', 'pikuseru_form_2_init');
+
+
+function pikuseru_form_2_response(){
+    $template = '
+        <br>
+        <div id="pikuseru-form-2-message" class="text-center alert">
+        </div>
+        ';
+    return $template;
+}
+add_shortcode( 'pikuseru-form-2-response', 'pikuseru_form_2_response' );
+
